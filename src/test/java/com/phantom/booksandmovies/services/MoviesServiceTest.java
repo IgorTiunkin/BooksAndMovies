@@ -1,5 +1,6 @@
 package com.phantom.booksandmovies.services;
 
+import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.repositories.MoviesRepository;
@@ -70,5 +71,11 @@ public class MoviesServiceTest {
         Assertions.assertEquals(1, moviesService.getAllMoviesByStatus(MovieStatus.WATCHED).size());
     }
 
+    @Test
+    public void whenBadTitle_ThenException() {
+        String bad = "Bad";
+        doReturn(Optional.empty()).when(moviesRepository).findMovieByTitle(bad);
+        Assertions.assertThrows(MovieNotFoundException.class, () -> moviesService.getMovieByTitle(bad));
+    }
 
 }
