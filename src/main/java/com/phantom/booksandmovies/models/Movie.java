@@ -34,4 +34,6 @@ public class Movie {
                 ", movieStatus=" + movieStatus +
                 '}';
     }
+
+
 }

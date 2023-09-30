@@ -1,5 +1,6 @@
 package com.phantom.booksandmovies.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.mappers.MoviesMapper;
@@ -10,9 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,9 +59,27 @@ public class MoviesController {
         return movieDTOList;
     }
 
-    @ExceptionHandler (ConversionFailedException.class)
+    @ExceptionHandler ({ConversionFailedException.class, HttpMessageNotReadableException.class})
     public ResponseEntity <String> statusNotExist () {
-        return new ResponseEntity<>("Status not exist. Available statuses: WATCHED, TO_WATCH, DROPPED",
+        return new ResponseEntity<>(String.format("Status not exist. Available statuses: %s",
+                Arrays.toString(MovieStatus.values())),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/insert")
+    public ResponseEntity <String> insertMovie(@RequestBody @Valid MovieDTO movieDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(String.format("Insert error. Name cannot be empty. Available statuses: %s",
+                    Arrays.toString(MovieStatus.values())),
+                    HttpStatus.BAD_REQUEST);
+        }
+        Movie movie = moviesMapper.mapToMovie(movieDTO);
+        boolean isInserted = moviesService.insertMovie(movie);
+        if (isInserted) return new ResponseEntity<>(String.format("Movie saved: title: %s , status: %s",
+                movie.getTitle(), movie.getMovieStatus()), HttpStatus.CREATED);
+        return new ResponseEntity<>("Movie with such title already exist. If you want to update use /title/update",
+                HttpStatus.BAD_REQUEST);
+    }
+
+
 }

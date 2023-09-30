@@ -10,4 +10,8 @@ public class MoviesMapper {
     public MovieDTO mapToDTO(Movie movie) {
         return new MovieDTO(movie.getTitle(), movie.getMovieStatus());
     }
+
+    public Movie mapToMovie(MovieDTO movieDTO) {
+        return new Movie(null, movieDTO.getTitle(), movieDTO.getMovieStatus());
+    }
 }
