@@ -81,5 +81,30 @@ public class MoviesController {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping("/{title}")
+    public ResponseEntity <String> deleteMovie (@PathVariable ("title") String title) {
+        moviesService.deleteMovie(title);
+        return new ResponseEntity<>(String.format("Movie %s successfully deleted", title),
+        HttpStatus.OK);
+    }
+
+    @PutMapping ("/movie/{title}")
+    public ResponseEntity <String> updateMovie (@PathVariable ("title") String oldTitle,
+                                                @RequestBody @Valid MovieDTO movieDTO,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(String.format("Update error. Name cannot be empty. Available statuses: %s",
+                    Arrays.toString(MovieStatus.values())),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        Movie movie = moviesMapper.mapToMovie(movieDTO);
+        moviesService.updateMovie(movie, oldTitle);
+        return new ResponseEntity<>(String.format("Movie successfully updated. Title: %s, Status: %s",
+                movie.getTitle(),
+                movie.getMovieStatus()),
+                HttpStatus.OK);
+
+    }
 
 }
