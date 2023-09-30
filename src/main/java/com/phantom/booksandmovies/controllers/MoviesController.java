@@ -4,8 +4,10 @@ import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.mappers.MoviesMapper;
 import com.phantom.booksandmovies.models.Movie;
+import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.services.MoviesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +39,24 @@ public class MoviesController {
         return moviesMapper.mapToDTO(movie);
     }
 
+
     @ExceptionHandler (MovieNotFoundException.class)
     public ResponseEntity<String> movieNotFound(MovieNotFoundException movieNotFoundException) {
         return new ResponseEntity<>(movieNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/all/{status}")
+    public List <MovieDTO> getMoviesByStatus (@PathVariable ("status") MovieStatus movieStatus) {
+        List<Movie> allMoviesByStatus = moviesService.getAllMoviesByStatus(movieStatus);
+        List <MovieDTO> movieDTOList = allMoviesByStatus
+                .stream().map(moviesMapper::mapToDTO)
+                .collect(Collectors.toList());
+        return movieDTOList;
+    }
+
+    @ExceptionHandler (ConversionFailedException.class)
+    public ResponseEntity <String> statusNotExist () {
+        return new ResponseEntity<>("Status not exist. Available statuses: WATCHED, TO_WATCH, DROPPED",
+                HttpStatus.BAD_REQUEST);
     }
 }

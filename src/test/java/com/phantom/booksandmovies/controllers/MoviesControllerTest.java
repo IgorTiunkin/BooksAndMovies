@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionFailedException;
 
 import java.util.List;
 
@@ -63,4 +64,12 @@ public class MoviesControllerTest {
         doThrow(new MovieNotFoundException()).when(moviesService).getMovieByTitle("Bad");
         Assertions.assertThrows(MovieNotFoundException.class, () -> moviesController.getMovieByTitle("Bad"));
     }
+
+    @Test
+    public void whenDropped_ThenMonster() {
+        doReturn(List.of(MONSTER)).when(moviesService).getAllMoviesByStatus(MovieStatus.DROPPED);
+        Assertions.assertEquals(MONSTER.getTitle(), moviesController.getMoviesByStatus(MovieStatus.DROPPED).get(0).getTitle());
+    }
+
+
 }
