@@ -7,6 +7,7 @@ import com.phantom.booksandmovies.mappers.MoviesMapper;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.services.MoviesService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class MoviesController {
     private final MoviesMapper moviesMapper;
 
     @GetMapping("/all")
+    @ApiOperation(value = "Get all movies",
+    notes = "You can get all movies with all statuses")
     public List <MovieDTO> getAllMovies() {
         List <Movie> movieList = moviesService.getAllMovies();
         List <MovieDTO> movieDTOS = movieList
@@ -39,6 +42,9 @@ public class MoviesController {
     }
 
     @GetMapping("/movie/{title}")
+    @ApiOperation(value = "Get movie by title",
+    notes = "Give the title of movie and get it",
+    response = MovieDTO.class)
     public MovieDTO getMovieByTitle(@PathVariable("title") String title) {
         Movie movie = moviesService.getMovieByTitle(title);
         return moviesMapper.mapToDTO(movie);
@@ -51,6 +57,7 @@ public class MoviesController {
     }
 
     @GetMapping("/all/{status}")
+    @ApiOperation(value = "Get all movies by status")
     public List <MovieDTO> getMoviesByStatus (@PathVariable ("status") MovieStatus movieStatus) {
         List<Movie> allMoviesByStatus = moviesService.getAllMoviesByStatus(movieStatus);
         List <MovieDTO> movieDTOList = allMoviesByStatus
@@ -67,6 +74,7 @@ public class MoviesController {
     }
 
     @PostMapping("/insert")
+    @ApiOperation(value = "Insert new movie")
     public ResponseEntity <String> insertMovie(@RequestBody @Valid MovieDTO movieDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(String.format("Insert error. Name cannot be empty. Available statuses: %s",
@@ -82,6 +90,7 @@ public class MoviesController {
     }
 
     @DeleteMapping("/{title}")
+    @ApiOperation(value = "Delete movie")
     public ResponseEntity <String> deleteMovie (@PathVariable ("title") String title) {
         moviesService.deleteMovie(title);
         return new ResponseEntity<>(String.format("Movie %s successfully deleted", title),
@@ -89,6 +98,7 @@ public class MoviesController {
     }
 
     @PutMapping ("/movie/{title}")
+    @ApiOperation(value = "Update movie")
     public ResponseEntity <String> updateMovie (@PathVariable ("title") String oldTitle,
                                                 @RequestBody @Valid MovieDTO movieDTO,
                                                 BindingResult bindingResult) {
