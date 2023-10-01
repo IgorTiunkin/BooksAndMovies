@@ -3,12 +3,14 @@ package com.phantom.booksandmovies.controllers;
 import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.mappers.MoviesMapper;
+import com.phantom.booksandmovies.mappers.MoviesToDTOMapper;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.services.MoviesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionFailedException;
@@ -21,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class MoviesControllerTest {
 
     private MoviesController moviesController;
-    private MoviesMapper moviesMapper;
+    private MoviesToDTOMapper moviesToDTOMapper;
     private MoviesService moviesService;
 
     private final Movie BAKEMONOGATARI = new Movie(1, "Bakemonogatari", MovieStatus.WATCHED);
@@ -32,8 +34,8 @@ public class MoviesControllerTest {
     @BeforeEach
     public void init () {
         moviesService = mock(MoviesService.class);
-        moviesMapper = new MoviesMapper();
-        moviesController = new MoviesController(moviesService, moviesMapper);
+        moviesToDTOMapper = Mappers.getMapper(MoviesToDTOMapper.class);
+        moviesController = new MoviesController(moviesService, moviesToDTOMapper);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.mappers.MoviesMapper;
+import com.phantom.booksandmovies.mappers.MoviesToDTOMapper;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.services.MoviesService;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MoviesController {
     private final MoviesService moviesService;
-    private final MoviesMapper moviesMapper;
+    private final MoviesToDTOMapper moviesToDTOMapper;
 
     @GetMapping("/all")
     @ApiOperation(value = "Get all movies",
@@ -36,7 +37,7 @@ public class MoviesController {
         List <Movie> movieList = moviesService.getAllMovies();
         List <MovieDTO> movieDTOS = movieList
                 .stream()
-                .map(moviesMapper::mapToDTO)
+                .map(moviesToDTOMapper::toMovieDTO)
                 .collect(Collectors.toList());
         return movieDTOS;
     }
@@ -47,7 +48,7 @@ public class MoviesController {
     response = MovieDTO.class)
     public MovieDTO getMovieByTitle(@PathVariable("title") String title) {
         Movie movie = moviesService.getMovieByTitle(title);
-        return moviesMapper.mapToDTO(movie);
+        return moviesToDTOMapper.toMovieDTO(movie);
     }
 
 
@@ -61,7 +62,7 @@ public class MoviesController {
     public List <MovieDTO> getMoviesByStatus (@PathVariable ("status") MovieStatus movieStatus) {
         List<Movie> allMoviesByStatus = moviesService.getAllMoviesByStatus(movieStatus);
         List <MovieDTO> movieDTOList = allMoviesByStatus
-                .stream().map(moviesMapper::mapToDTO)
+                .stream().map(moviesToDTOMapper::toMovieDTO)
                 .collect(Collectors.toList());
         return movieDTOList;
     }
@@ -81,7 +82,7 @@ public class MoviesController {
                     Arrays.toString(MovieStatus.values())),
                     HttpStatus.BAD_REQUEST);
         }
-        Movie movie = moviesMapper.mapToMovie(movieDTO);
+        Movie movie = moviesToDTOMapper.toMovie(movieDTO);
         boolean isInserted = moviesService.insertMovie(movie);
         if (isInserted) return new ResponseEntity<>(String.format("Movie saved: title: %s , status: %s",
                 movie.getTitle(), movie.getMovieStatus()), HttpStatus.CREATED);
@@ -108,7 +109,7 @@ public class MoviesController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        Movie movie = moviesMapper.mapToMovie(movieDTO);
+        Movie movie = moviesToDTOMapper.toMovie(movieDTO);
         moviesService.updateMovie(movie, oldTitle);
         return new ResponseEntity<>(String.format("Movie successfully updated. Title: %s, Status: %s",
                 movie.getTitle(),
