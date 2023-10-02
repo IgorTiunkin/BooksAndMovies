@@ -51,7 +51,7 @@ public class MoviesController {
 
     @ExceptionHandler (MovieNotFoundException.class)
     public ResponseEntity<String> movieNotFound(MovieNotFoundException movieNotFoundException) {
-        return new ResponseEntity<>(movieNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(movieNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/all/{status}")
