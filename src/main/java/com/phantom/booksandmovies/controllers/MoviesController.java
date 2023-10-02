@@ -1,9 +1,7 @@
 package com.phantom.booksandmovies.controllers;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
-import com.phantom.booksandmovies.mappers.MoviesMapper;
 import com.phantom.booksandmovies.mappers.MoviesToDTOMapper;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
@@ -18,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -30,11 +32,6 @@ public class MoviesServiceTest {
     }
 
     @Test
-    public void contextLoad() {
-
-    }
-
-    @Test
     public void whenGetAll_thenSizeEqualsThree () {
         List <Movie> movieList = List.of(
                 BAKEMONOGATARI,
@@ -43,7 +40,7 @@ public class MoviesServiceTest {
         );
         doReturn(movieList).when(moviesRepository).findAll();
         List<Movie> testMovies = moviesService.getAllMovies();
-        Assertions.assertEquals(3, testMovies.size());
+        assertEquals(3, testMovies.size());
     }
 
     @Test
@@ -52,7 +49,7 @@ public class MoviesServiceTest {
         doReturn(Optional.of(BAKEMONOGATARI))
                 .when(moviesRepository).findMovieByTitle(TITLE);
         Movie movie = moviesService.getMovieByTitle(TITLE);
-        Assertions.assertEquals(MovieStatus.WATCHED, movie.getMovieStatus());
+        assertEquals(MovieStatus.WATCHED, movie.getMovieStatus());
     }
 
     @Test
@@ -61,21 +58,62 @@ public class MoviesServiceTest {
         doReturn(Optional.of(MONSTER))
                 .when(moviesRepository).findMovieByTitle(TITLE);
         Movie movie = moviesService.getMovieByTitle(TITLE);
-        Assertions.assertEquals(MovieStatus.DROPPED, movie.getMovieStatus());
+        assertEquals(MovieStatus.DROPPED, movie.getMovieStatus());
     }
 
     @Test
     public void whenWatched_ThenSizeOne () {
         doReturn(List.of(BAKEMONOGATARI)).when(moviesRepository)
                 .findAllByMovieStatus(MovieStatus.WATCHED);
-        Assertions.assertEquals(1, moviesService.getAllMoviesByStatus(MovieStatus.WATCHED).size());
+        assertEquals(1, moviesService.getAllMoviesByStatus(MovieStatus.WATCHED).size());
     }
 
     @Test
     public void whenBadTitle_ThenException() {
         String bad = "Bad";
         doReturn(Optional.empty()).when(moviesRepository).findMovieByTitle(bad);
-        Assertions.assertThrows(MovieNotFoundException.class, () -> moviesService.getMovieByTitle(bad));
+        assertThrows(MovieNotFoundException.class, () -> moviesService.getMovieByTitle(bad));
+    }
+
+    @Test
+    public void whenMovieIsAbsent_thenSave() {
+        doReturn(Optional.empty()).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        doReturn(null).when(moviesRepository).save(any());
+        assertTrue(moviesService.insertMovie(BAKEMONOGATARI));
+    }
+
+    @Test
+    public void whenMovieIsPresent_thenFalse() {
+        doReturn(Optional.of(BAKEMONOGATARI)).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        assertFalse(moviesService.insertMovie(BAKEMONOGATARI));
+    }
+
+
+    @Test
+    public void whenMovieIsPresent_ThenDelete() {
+        doNothing().when(moviesRepository).delete(any());
+        doReturn(Optional.of(BAKEMONOGATARI)).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        assertTrue(moviesService.deleteMovie(BAKEMONOGATARI.getTitle()));
+    }
+
+    @Test
+    public void whenMovieIsAbsentInDelete_ThenException() {
+        doReturn(Optional.empty()).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        assertThrows(MovieNotFoundException.class,
+                () -> moviesService.deleteMovie(BAKEMONOGATARI.getTitle()));
+    }
+
+    @Test
+    public void whenUpdate_thenMovie() {
+        doReturn(Optional.of(BAKEMONOGATARI)).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        assertEquals(MONSTER, moviesService.updateMovie(MONSTER, BAKEMONOGATARI.getTitle()));
+    }
+
+    @Test
+    public void whenMovieIsAbsentInUpdate_ThenException() {
+        doReturn(Optional.empty()).when(moviesRepository).findMovieByTitle(BAKEMONOGATARI.getTitle());
+        assertThrows(MovieNotFoundException.class,
+                () -> moviesService.updateMovie(MONSTER, BAKEMONOGATARI.getTitle()));
     }
 
 }

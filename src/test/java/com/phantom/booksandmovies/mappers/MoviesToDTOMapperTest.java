@@ -10,6 +10,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MoviesToDTOMapperTest {
     private final MoviesToDTOMapper moviesToDTOMapper = Mappers.getMapper(MoviesToDTOMapper.class);
@@ -18,15 +20,27 @@ public class MoviesToDTOMapperTest {
     @Test
     public void whenMovie_thenMovieDto () {
         MovieDTO movieDTO = moviesToDTOMapper.toMovieDTO(BAKEMONOGATARI);
-        Assertions.assertEquals(movieDTO.getTitle(), BAKEMONOGATARI.getTitle());
-        Assertions.assertEquals(movieDTO.getMovieStatus(), BAKEMONOGATARI.getMovieStatus());
+        assertEquals(movieDTO.getTitle(), BAKEMONOGATARI.getTitle());
+        assertEquals(movieDTO.getMovieStatus(), BAKEMONOGATARI.getMovieStatus());
     }
 
     @Test
     public void whenMovieDTO_thenMovie() {
         MovieDTO testMovieDTO = new MovieDTO(BAKEMONOGATARI.getTitle(), BAKEMONOGATARI.getMovieStatus());
         Movie movie = moviesToDTOMapper.toMovie(testMovieDTO);
-        Assertions.assertEquals(BAKEMONOGATARI.getTitle(), movie.getTitle());
-        Assertions.assertEquals(BAKEMONOGATARI.getMovieStatus(), movie.getMovieStatus());
+        assertEquals(BAKEMONOGATARI.getTitle(), movie.getTitle());
+        assertEquals(BAKEMONOGATARI.getMovieStatus(), movie.getMovieStatus());
+    }
+
+    @Test
+    public void whenMovieNull_thenNull() {
+        MovieDTO movieDTO = moviesToDTOMapper.toMovieDTO(null);
+        assertNull(movieDTO);
+    }
+
+    @Test
+    public void whenMovieDTONull_thenNull(){
+        Movie movie = moviesToDTOMapper.toMovie(null);
+        assertNull(movie);
     }
 }

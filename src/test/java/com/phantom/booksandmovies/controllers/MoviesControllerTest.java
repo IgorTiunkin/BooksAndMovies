@@ -2,7 +2,6 @@ package com.phantom.booksandmovies.controllers;
 
 import com.phantom.booksandmovies.DTO.MovieDTO;
 import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
-import com.phantom.booksandmovies.mappers.MoviesMapper;
 import com.phantom.booksandmovies.mappers.MoviesToDTOMapper;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
@@ -11,12 +10,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.convert.ConversionFailedException;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -42,14 +40,14 @@ public class MoviesControllerTest {
     public void whenAll_ThenSize3() {
         doReturn(List.of(BAKEMONOGATARI, MONSTER, OSHI_NO_KO))
                 .when(moviesService).getAllMovies();
-        Assertions.assertEquals(3, moviesController.getAllMovies().size());
+        assertEquals(3, moviesController.getAllMovies().size());
     }
 
     @Test
     public void whenAll_ThenDTO() {
         doReturn(List.of(BAKEMONOGATARI, MONSTER, OSHI_NO_KO))
                 .when(moviesService).getAllMovies();
-        Assertions.assertEquals(MovieDTO.class, moviesController.getAllMovies().get(0).getClass());
+        assertEquals(MovieDTO.class, moviesController.getAllMovies().get(0).getClass());
     }
 
 
@@ -57,20 +55,20 @@ public class MoviesControllerTest {
     public void whenBakemonogatari_thenBakenomogatariDTO() {
         doReturn(BAKEMONOGATARI).when(moviesService).getMovieByTitle(BAKEMONOGATARI.getTitle());
         MovieDTO movieDTO = moviesController.getMovieByTitle(BAKEMONOGATARI.getTitle());
-        Assertions.assertEquals(BAKEMONOGATARI.getTitle(), movieDTO.getTitle());
-        Assertions.assertEquals(BAKEMONOGATARI.getMovieStatus(), movieDTO.getMovieStatus());
+        assertEquals(BAKEMONOGATARI.getTitle(), movieDTO.getTitle());
+        assertEquals(BAKEMONOGATARI.getMovieStatus(), movieDTO.getMovieStatus());
     }
 
     @Test
     public void whenBadTitle_ThenResponseEntity() {
         doThrow(new MovieNotFoundException()).when(moviesService).getMovieByTitle("Bad");
-        Assertions.assertThrows(MovieNotFoundException.class, () -> moviesController.getMovieByTitle("Bad"));
+        assertThrows(MovieNotFoundException.class, () -> moviesController.getMovieByTitle("Bad"));
     }
 
     @Test
     public void whenDropped_ThenMonster() {
         doReturn(List.of(MONSTER)).when(moviesService).getAllMoviesByStatus(MovieStatus.DROPPED);
-        Assertions.assertEquals(MONSTER.getTitle(), moviesController.getMoviesByStatus(MovieStatus.DROPPED).get(0).getTitle());
+        assertEquals(MONSTER.getTitle(), moviesController.getMoviesByStatus(MovieStatus.DROPPED).get(0).getTitle());
     }
 
 
