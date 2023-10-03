@@ -17,7 +17,7 @@ MockMvc : Controller testing
 Postman : Request testing  
 Jacoco : Coverage check  
 MapStruct : Entity mapping  
-Swagger : Documentation creation
+Swagger : Documentation creation  
 
 ## Postman
 
