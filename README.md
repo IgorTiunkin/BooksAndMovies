@@ -18,6 +18,7 @@ Postman : Request testing
 Jacoco : Coverage check  
 MapStruct : Entity mapping  
 Swagger : Documentation creation  
+Flyway : Database migration  
 
 ## Postman
 
