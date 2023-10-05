@@ -19,6 +19,8 @@ Jacoco : Coverage check
 MapStruct : Entity mapping  
 Swagger : Documentation creation  
 Flyway : Database migration  
+Dotenv : Usage of .env during development
+Docker : Deployment
 
 ## Postman
 

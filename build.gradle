@@ -8,9 +8,6 @@ plugins {
 group = 'com.phantom'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    sourceCompatibility = "$JAVA_SOURCE_VERSION"
-}
 
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
@@ -39,7 +36,7 @@ dependencies {
 
     implementation "org.flywaydb:flyway-core:$FLYWAY_VERSION"
 
-    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+    implementation "io.github.cdimascio:dotenv-java:$DOTENV_VERSION"
 
     compileOnly "org.projectlombok:lombok"
     runtimeOnly "org.postgresql:postgresql"
