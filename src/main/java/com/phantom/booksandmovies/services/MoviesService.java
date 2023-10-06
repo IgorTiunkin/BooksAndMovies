@@ -5,6 +5,10 @@ import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.repositories.MoviesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,7 @@ public class MoviesService {
     }
 
     @Transactional (readOnly = true)
+    @Cacheable(value = "MoviesByTitle", key = "#title")
     public Movie getMovieByTitle(String title) {
         return moviesRepository.findMovieByTitle(title).orElseThrow(MovieNotFoundException::new);
     }
@@ -40,12 +45,21 @@ public class MoviesService {
     }
 
     @Transactional
+    @CacheEvict(value = "MoviesByTitle", key = "#title")
     public boolean deleteMovie(String title) {
         moviesRepository.delete(getMovieByTitle(title));
         return true;
     }
 
     @Transactional
+    @Caching(
+            cacheable = {
+                    @Cacheable(value = "MoviesByTitle", key = "#movie.title")
+            },
+            evict = {
+                    @CacheEvict(value = "MoviesByTitle", key = "#oldTitle")
+            }
+    )
     public Movie updateMovie(Movie movie, String oldTitle) {
         Movie movieByTitle = getMovieByTitle(oldTitle);
         movieByTitle.setTitle(movie.getTitle());

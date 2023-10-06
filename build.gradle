@@ -29,6 +29,7 @@ dependencies {
     //implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-cache"
 
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
@@ -44,6 +45,7 @@ dependencies {
 
     implementation "org.mapstruct:mapstruct:$MAPSTRUCT_VERSION"
     annotationProcessor "org.mapstruct:mapstruct-processor:$MAPSTRUCT_VERSION"
+
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     //testImplementation 'org.springframework.security:spring-security-test'
