@@ -5,10 +5,11 @@ import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.repositories.MoviesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames={"MoviesByTitle"})
 public class MoviesService {
     private final MoviesRepository moviesRepository;
 
@@ -26,7 +28,7 @@ public class MoviesService {
     }
 
     @Transactional (readOnly = true)
-    @Cacheable(value = "MoviesByTitle", key = "#title")
+    @Cacheable(key = "#title")
     public Movie getMovieByTitle(String title) {
         return moviesRepository.findMovieByTitle(title).orElseThrow(MovieNotFoundException::new);
     }
@@ -45,7 +47,7 @@ public class MoviesService {
     }
 
     @Transactional
-    @CacheEvict(value = "MoviesByTitle", key = "#title")
+    @CacheEvict(key = "#title")
     public boolean deleteMovie(String title) {
         moviesRepository.delete(getMovieByTitle(title));
         return true;
@@ -54,10 +56,10 @@ public class MoviesService {
     @Transactional
     @Caching(
             cacheable = {
-                    @Cacheable(value = "MoviesByTitle", key = "#movie.title")
+                    @Cacheable(key = "#movie.title")
             },
             evict = {
-                    @CacheEvict(value = "MoviesByTitle", key = "#oldTitle")
+                    @CacheEvict(key = "#oldTitle")
             }
     )
     public Movie updateMovie(Movie movie, String oldTitle) {
@@ -67,4 +69,12 @@ public class MoviesService {
         moviesRepository.save(movieByTitle);
         return movie;
     }
+
+    @CacheEvict(allEntries = true)
+    public void evictAllCacheValues() {
+        System.out.println("Cache of movie has been cleaned");
+    }
+
+
+
 }

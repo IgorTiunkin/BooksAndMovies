@@ -19,7 +19,7 @@ Jacoco : Coverage check
 MapStruct : Entity mapping  
 Swagger : Documentation creation  
 Flyway : Database migration  
-Dotenv : Usage of .env during development
+Dotenv : Usage of .env during development  
 Docker : Deployment
 
 ## Postman
@@ -30,5 +30,7 @@ For testing convenience postman testing collection added.
 
 You can use http://localhost:8080/swagger-ui/ after application launch to see documentation and test functionality.
 
+## Caching
 
+Base caching was made with default Spring Boot ConcurrentMapCacheManager with fixed rate clean.
 
