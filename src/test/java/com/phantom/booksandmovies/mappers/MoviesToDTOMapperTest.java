@@ -15,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MoviesToDTOMapperTest {
     private final MoviesToDTOMapper moviesToDTOMapper = Mappers.getMapper(MoviesToDTOMapper.class);
-    private final Movie BAKEMONOGATARI = new Movie(1, "Bakemonogatari", MovieStatus.WATCHED);
+    private final Movie BAKEMONOGATARI = Movie.builder()
+            .id(1).title("Bakemonogatari").movieStatus(MovieStatus.WATCHED).build();
 
     @Test
     public void whenMovie_thenMovieDto () {

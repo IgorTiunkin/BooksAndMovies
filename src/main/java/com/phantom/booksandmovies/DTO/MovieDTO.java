@@ -3,10 +3,7 @@ package com.phantom.booksandmovies.DTO;
 import com.phantom.booksandmovies.models.MovieStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +13,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ApiModel(description = "Information about movie")
 public class MovieDTO {
 

@@ -20,9 +20,13 @@ public class MoviesServiceTest {
 
     private MoviesService moviesService;
     private MoviesRepository moviesRepository;
-    private final Movie BAKEMONOGATARI = new Movie(1, "Bakemonogatari", MovieStatus.WATCHED);
-    private final Movie MONSTER = new Movie(2, "Monster", MovieStatus.DROPPED);
-    private final Movie OSHI_NO_KO = new Movie(3, "Oshi no ko", MovieStatus.TO_WATCH);
+
+    private final Movie BAKEMONOGATARI = Movie.builder()
+            .id(1).title("Bakemonogatari").movieStatus(MovieStatus.WATCHED).build();
+    private final Movie MONSTER = Movie.builder()
+            .id(2).title("Monster").movieStatus(MovieStatus.DROPPED).build();
+    private final Movie OSHI_NO_KO = Movie.builder()
+            .id(3).title("Oshi no ko").movieStatus(MovieStatus.TO_WATCH).build();
 
 
     @BeforeEach
