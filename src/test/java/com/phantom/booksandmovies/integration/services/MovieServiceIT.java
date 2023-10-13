@@ -4,13 +4,17 @@ import com.phantom.booksandmovies.exceptions.MovieNotFoundException;
 import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.services.MoviesService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +32,20 @@ import static org.mockito.Mockito.doReturn;
         "classpath:sql/data.sql"
 })
 public class MovieServiceIT {
+    private static final PostgreSQLContainer<?> container =
+            new PostgreSQLContainer<>("postgres:13.1-alpine");
+
+    @BeforeAll
+    static void startContainer() {
+        container.start();
+    }
+
+    @DynamicPropertySource
+    static void postgresProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+    }
+
+
     private final MoviesService moviesService;
 
     private final Movie BAKEMONOGATARI = Movie.builder()

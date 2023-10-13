@@ -15,6 +15,7 @@ Lombok : Simplify code
 JUnit : Base test platform  
 MockMvc : Controller testing  
 Postman : Request testing  
+TestContainers : Test DB  
 Jacoco : Coverage check  
 MapStruct : Entity mapping  
 Swagger : Documentation creation  
