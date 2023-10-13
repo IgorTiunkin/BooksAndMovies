@@ -11,6 +11,6 @@ public class MoviesServiceCacheCleaner {
 
     private final MoviesService moviesService;
 
-    @Scheduled(fixedRate = 6000)
+    //@Scheduled(fixedRate = 6000)
     public void evictAllcachesAtIntervals() {moviesService.evictAllCacheValues();}
 }

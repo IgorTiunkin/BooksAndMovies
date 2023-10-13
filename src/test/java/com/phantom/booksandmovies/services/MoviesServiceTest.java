@@ -7,6 +7,9 @@ import com.phantom.booksandmovies.repositories.MoviesRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,8 +21,13 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MoviesServiceTest {
 
-    private MoviesService moviesService;
+    @Mock
     private MoviesRepository moviesRepository;
+
+    @InjectMocks
+    private MoviesService moviesService;
+
+
 
     private final Movie BAKEMONOGATARI = Movie.builder()
             .id(1).title("Bakemonogatari").movieStatus(MovieStatus.WATCHED).build();
@@ -28,12 +36,6 @@ public class MoviesServiceTest {
     private final Movie OSHI_NO_KO = Movie.builder()
             .id(3).title("Oshi no ko").movieStatus(MovieStatus.TO_WATCH).build();
 
-
-    @BeforeEach
-    public void init () {
-        moviesRepository = mock(MoviesRepository.class);
-        moviesService = new MoviesService(moviesRepository);
-    }
 
     @Test
     public void whenGetAll_thenSizeEqualsThree () {
