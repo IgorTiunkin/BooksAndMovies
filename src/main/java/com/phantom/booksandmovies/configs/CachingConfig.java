@@ -1,5 +1,6 @@
 package com.phantom.booksandmovies.configs;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -15,6 +16,9 @@ import java.time.Duration;
 @Profile("!test")
 public class CachingConfig {
 
+    @Value("${redis.ttl}")
+    int timeToLive;
+
     /* @Bean
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager();
@@ -24,7 +28,7 @@ public class CachingConfig {
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(10))
+                .entryTtl(Duration.ofSeconds(timeToLive))
                 .disableCachingNullValues();
     }
 

@@ -5,6 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * Previous version of cache needed to be cleaned manually
+ */
+
 @RequiredArgsConstructor
 @Component
 public class MoviesServiceCacheCleaner {

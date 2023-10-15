@@ -16,6 +16,7 @@ JUnit : Base test platform
 MockMvc : Controller testing  
 Postman : Request testing  
 TestContainers : Test DB  
+Redis : Caching  
 Jacoco : Coverage check  
 MapStruct : Entity mapping  
 Swagger : Documentation creation  
