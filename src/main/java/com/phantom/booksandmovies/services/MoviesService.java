@@ -5,10 +5,7 @@ import com.phantom.booksandmovies.models.Movie;
 import com.phantom.booksandmovies.models.MovieStatus;
 import com.phantom.booksandmovies.repositories.MoviesRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +52,8 @@ public class MoviesService {
 
     @Transactional
     @Caching(
-            cacheable = {
-                    @Cacheable(key = "#movie.title")
+            put = {
+                    @CachePut(key = "#movie.title")
             },
             evict = {
                     @CacheEvict(key = "#oldTitle")

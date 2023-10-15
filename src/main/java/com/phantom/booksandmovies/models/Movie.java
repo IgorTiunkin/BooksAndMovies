@@ -3,6 +3,7 @@ package com.phantom.booksandmovies.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table (name = "movie")
-public class Movie {
+public class Movie implements Serializable {
 
     @Id
     @Column(name = "id")
